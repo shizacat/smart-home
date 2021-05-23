@@ -19,13 +19,13 @@
 #   tasks:
 #     - name: Swap off
 #       shell: dphys-swapfile swapoff
-    
+
 #     - name: Remove package
 #       apt:
 #         state: absent
 #         purge: yes
 #         pkg: dphys-swapfile
-    
+
 #     - name: Remove file
 #       shell: rm /var/swap
 
@@ -116,5 +116,8 @@
 
     - name: Cope docker-compose
       template:
-        src: template/docker-compose.yaml.j2
-        dest: "{{root_directory}}/docker-compose.yml"
+        src: template/{{ item }}.j2
+        dest: "{{root_directory}}/{{ item }}"
+      loop:
+        - docker-compose.yaml
+        - Dockerfile.homebridge

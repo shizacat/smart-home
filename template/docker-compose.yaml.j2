@@ -42,7 +42,10 @@ services:
       - TZ={{ time_zone }}
 
   homebridge:
-    image: oznu/homebridge:latest
+    # image: oznu/homebridge:latest
+    build:
+      dockerfile: Dockerfile.homebridge
+      context: .
     container_name: homebridge
     restart: always
     network_mode: host
