@@ -13,21 +13,28 @@
           - screen
           - python3-setuptools
 
-# - name: Disable swap
-#   hosts: pi
-#   become: true
-#   tasks:
-#     - name: Swap off
-#       shell: dphys-swapfile swapoff
+- name: Disable swap
+  hosts: pi
+  become: true
+  tasks:
+    - name: Gather the package facts
+      package_facts:
+        manager: auto
 
-#     - name: Remove package
-#       apt:
-#         state: absent
-#         purge: yes
-#         pkg: dphys-swapfile
+    - name: Swap off
+      shell: dphys-swapfile swapoff
+      when: "'dphys-swapfile' in ansible_facts.packages"
 
-#     - name: Remove file
-#       shell: rm /var/swap
+    - name: Remove package
+      apt:
+        state: absent
+        purge: yes
+        pkg: dphys-swapfile
+
+    - name: Remove file
+      file:
+        state: absent
+        path: /var/swap
 
 - name: Install Docker
   hosts: pi
