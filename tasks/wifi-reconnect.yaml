@@ -1,0 +1,9 @@
+- name: WiFi | Copy script
+  copy:
+    src: template/wifi/wifi-reconnect.sh
+    dest: "{{ root_directory }}/wifi-reconnect.sh"
+
+- name: WiFi | Copy cron.d
+  copy:
+    src: template/wifi/wifi-reconnect
+    dest: "/etc/cron.d/wifi-reconnect"

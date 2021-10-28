@@ -1,0 +1,3 @@
+PATH=/usr/lib/sysstat:/usr/sbin:/usr/sbin:/usr/bin:/sbin:/bin
+
+* * * * * root /service/wifi-reconnect.sh

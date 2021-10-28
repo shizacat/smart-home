@@ -65,3 +65,4 @@ npm install -g --save homebridge-mqttthing@latest
 ## Ссылки
 
 - [UART configuration](https://www.raspberrypi.org/documentation/configuration/uart.md)
+- https://gist.github.com/carry0987/372b9fefdd8041d0374f4e08fbf052b1

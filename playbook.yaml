@@ -17,6 +17,8 @@
       import_tasks: tasks/base.yaml
     - name: Disable swap
       import_tasks: tasks/disable_swap.yaml
+    - name: Setup WiFi Reconnect
+      import_tasks: tasks/wifi-reconnect.yaml
 
   roles:
     - geerlingguy.pip
