@@ -1,44 +1,9 @@
 ---
-- name: Base setup
+- name: Setup
   hosts: pi
   become: true
-  tasks:
-    - name: Install base package
-      apt:
-        state: present
-        update_cache: yes
-        pkg:
-          - vim
-          - htop
-          - screen
-          - python3-setuptools
-
-- name: Disable swap
-  hosts: pi
-  become: true
-  tasks:
-    - name: Gather the package facts
-      package_facts:
-        manager: auto
-
-    - name: Swap off
-      shell: dphys-swapfile swapoff
-      when: "'dphys-swapfile' in ansible_facts.packages"
-
-    - name: Remove package
-      apt:
-        state: absent
-        purge: yes
-        pkg: dphys-swapfile
-
-    - name: Remove file
-      file:
-        state: absent
-        path: /var/swap
-
-- name: Install Docker
-  hosts: pi
-  become: true
+  vars_files:
+    - vars.yaml
   vars:
     ansible_python_interpreter: /usr/bin/python3
     docker_install_compose: true
@@ -47,84 +12,18 @@
     docker_pip_executable: pip3
     pip_package: python3-pip
 
+  pre_tasks:
+    - name: Install base package
+      import_tasks: tasks/base.yaml
+    - name: Disable swap
+      import_tasks: tasks/disable_swap.yaml
+
   roles:
     - geerlingguy.pip
     - geerlingguy.docker_arm
-
-- name: Install loader for cc253x
-  vars_files: vars.yaml
-  hosts: pi
-  become: true
+  
   tasks:
-    - name: Install dependences
-      apt:
-        state: present
-        update_cache: yes
-        pkg:
-          - wiringpi
-          - git
-
-    - name: Install loader (/opt/flash_cc)
-      git:
-        repo: https://github.com/jmichault/flash_cc2531.git
-        dest: /opt/flash_cc
-
-- name: Install HomeBridge and Co
-  vars_files: vars.yaml
-  hosts: pi
-  become: true
-  tasks:
-    - name: Create folder
-      file:
-        path: "{{ item }}"
-        state: directory
-      loop:
-        - "{{ root_directory }}"
-        - "{{ root_directory }}/nginx/config"
-        - "{{ root_directory }}/nginx/web"
-        - "{{ root_directory }}/zigbee2mqtt"
-
-    - name: Copy nginx [config]
-      copy:
-        src: "template/{{ item }}"
-        dest: "{{ root_directory }}/nginx/{{ item }}"
-      loop:
-        - config/nginx.conf
-        - web/index.html
-    
-    - name: Create folder [mosquitto]
-      file:
-        path: "{{ item }}"
-        state: directory
-        owner: 1883
-        group: 1883
-      loop:
-        - "{{ root_directory }}/mosquitto/data"
-        - "{{ root_directory }}/mosquitto/logs"
-        - "{{ root_directory }}/mosquitto/conf"
-    
-    - name: Copy mosquitto [config]
-      template:
-        src: template/mosquitto/conf/{{ item }}
-        dest: "{{root_directory}}/mosquitto/conf/{{ item }}"
-        owner: 1883
-        group: 1883
-      loop:
-        - mosquitto.conf
-        - users
-
-    - name: Mosquitto [Hash user password]
-      shell: docker run --rm -v {{root_directory}}/mosquitto/conf:/data eclipse-mosquitto:2.0.10 mosquitto_passwd -U /data/users
-
-    - name: Zigbee2mqtt. [Copy config]
-      template:
-        src: template/zigbee2mqtt/configuration.yaml
-        dest: "{{root_directory}}/zigbee2mqtt/configuration.yaml"
-
-    - name: Cope docker-compose
-      template:
-        src: template/{{ item }}.j2
-        dest: "{{root_directory}}/{{ item }}"
-      loop:
-        - docker-compose.yaml
-        - Dockerfile.homebridge
+    - name: Install loader for cc253x
+      import_tasks: tasks/soft_install_cc.yaml
+    - name: Install HomeBridge and Co
+      import_tasks: tasks/soft_install_homebridge_co.yaml

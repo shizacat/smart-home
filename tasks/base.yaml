@@ -1,0 +1,8 @@
+- name: Install base package
+  apt:
+    state: present
+    update_cache: yes
+    pkg:
+      - vim
+      - htop
+      - screen

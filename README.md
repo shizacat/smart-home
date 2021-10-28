@@ -36,7 +36,7 @@ You need to install package to local host: sshpass, python3-venv.
 ```bash
 python3 -m venv venv
 . venv/bin/activate
-pip install ansible==2.10
+pip install -r requirements.txt
 
 # don't install this (already in repository)
 # ansible-galaxy install geerlingguy.docker_arm

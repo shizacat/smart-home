@@ -1,0 +1,12 @@
+- name: CC253* | Install dependences
+  apt:
+    state: present
+    update_cache: yes
+    pkg:
+      - wiringpi
+      - git
+
+- name: CC253* | Install loader (/opt/flash_cc)
+  git:
+    repo: https://github.com/jmichault/flash_cc2531.git
+    dest: /opt/flash_cc

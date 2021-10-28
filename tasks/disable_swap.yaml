@@ -1,0 +1,18 @@
+- name: Disable swap | Gather the package facts
+  package_facts:
+    manager: auto
+
+- name: Disable swap | Swap off
+  shell: dphys-swapfile swapoff
+  when: "'dphys-swapfile' in ansible_facts.packages"
+
+- name: Disable swap | Remove package
+  apt:
+    state: absent
+    purge: yes
+    pkg: dphys-swapfile
+
+- name: Disable swap | Remove file
+  file:
+    state: absent
+    path: /var/swap

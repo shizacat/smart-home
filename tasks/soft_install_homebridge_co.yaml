@@ -1,0 +1,54 @@
+- name: Create folder
+  file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - "{{ root_directory }}"
+    - "{{ root_directory }}/nginx/config"
+    - "{{ root_directory }}/nginx/web"
+    - "{{ root_directory }}/zigbee2mqtt"
+
+- name: Copy nginx [config]
+  copy:
+    src: "template/{{ item }}"
+    dest: "{{ root_directory }}/nginx/{{ item }}"
+  loop:
+    - config/nginx.conf
+    - web/index.html
+
+- name: Create folder [mosquitto]
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: 1883
+    group: 1883
+  loop:
+    - "{{ root_directory }}/mosquitto/data"
+    - "{{ root_directory }}/mosquitto/logs"
+    - "{{ root_directory }}/mosquitto/conf"
+
+- name: Copy mosquitto [config]
+  template:
+    src: template/mosquitto/conf/{{ item }}
+    dest: "{{root_directory}}/mosquitto/conf/{{ item }}"
+    owner: 1883
+    group: 1883
+  loop:
+    - mosquitto.conf
+    - users
+
+- name: Mosquitto [Hash user password]
+  shell: docker run --rm -v {{root_directory}}/mosquitto/conf:/data eclipse-mosquitto:2.0.10 mosquitto_passwd -U /data/users
+
+- name: Zigbee2mqtt. [Copy config]
+  template:
+    src: template/zigbee2mqtt/configuration.yaml
+    dest: "{{root_directory}}/zigbee2mqtt/configuration.yaml"
+
+- name: Cope docker-compose
+  template:
+    src: template/{{ item }}.j2
+    dest: "{{root_directory}}/{{ item }}"
+  loop:
+    - docker-compose.yaml
+    - Dockerfile.homebridge
