@@ -1,2 +1,3 @@
 venv/*
 playbook.retry
+.venv/
