@@ -21,9 +21,10 @@
       import_tasks: tasks/wifi-reconnect.yaml
 
   roles:
+    - ericsysmin.chrony
     - geerlingguy.pip
     - geerlingguy.docker_arm
-  
+
   tasks:
     - name: Install loader for cc253x
       import_tasks: tasks/soft_install_cc.yaml

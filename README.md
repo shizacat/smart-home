@@ -42,6 +42,8 @@ pip install -r requirements.txt
 # ansible-galaxy install geerlingguy.docker_arm
 # ansible-galaxy install geerlingguy.pip
 # ansible-galaxy collection install community.docker
+#
+# ansible-galaxy role install -r requirements.yml
 ```
 
 Run script:
@@ -66,3 +68,11 @@ npm install -g --save homebridge-mqttthing@latest
 
 - [UART configuration](https://www.raspberrypi.org/documentation/configuration/uart.md)
 - https://gist.github.com/carry0987/372b9fefdd8041d0374f4e08fbf052b1
+
+
+## Chrony
+
+```console
+# Check status
+chronyc tracking
+```
