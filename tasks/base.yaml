@@ -1,4 +1,4 @@
-- name: Install base package
+- name: Base | Install packages
   apt:
     state: present
     update_cache: yes
@@ -6,3 +6,7 @@
       - vim
       - htop
       - screen
+
+- name: Base | Set timezone
+  community.general.timezone:
+    name: "{{ time_zone }}"
