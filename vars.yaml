@@ -4,8 +4,9 @@ root_directory: "/service/hb"
 # Time zone in which server will be work
 time_zone: "Europe/Moscow"
 
-mosquitto_user: user
-mosquitto_pass: DRBhTL2883
+mosquitto_u_user: user
+mosquitto_u_password: DRBhTL2883
+mosquitto_listen: "0.0.0.0"
 
 zigbee_device: /dev/ttyACM0
 

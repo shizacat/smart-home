@@ -1,0 +1,6 @@
+---
+mosquitto_u_user: user
+mosquitto_u_password: user
+
+mosquitto_listen: "127.0.0.1"
+mosquitto_port: "1883"

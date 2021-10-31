@@ -1,0 +1,64 @@
+---
+- name: Create mosquitto user.
+  user:
+    name: "{{ mosquitto_user }}"
+    append: false
+    uid: 1883
+
+- name: Create directories.
+  file:
+    path: "{{ item.path }}"
+    state: directory
+    recurse: yes
+    owner: "{{ mosquitto_user }}"
+    mode: "{{ item.mode }}"
+  loop:
+    - path: /etc/mosquitto
+      mode: "0750"
+    - path: /var/lib/mosquitto
+      mode: "0755"
+    - path: /var/log/mosquitto
+      mode: "0755"
+
+- name: Copy system files
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dst }}"
+    owner: "{{ item.owner }}"
+    mode: "{{ item.mode }}"
+  loop:
+    - src: mosquitto.service.j2
+      dst: /etc/systemd/system/mosquitto.service
+      mode: "0644"
+      owner: root
+    - src: mosquitto.j2
+      dst: "{{ bin_dir }}/mosquitto"
+      mode: "0755"
+      owner: root
+    - src: mosquitto_passwd.j2
+      dst: "{{ bin_dir }}/mosquitto_passwd"
+      mode: "0755"
+      owner: root
+    - src: mosquitto.conf.j2
+      dst: "/etc/mosquitto/mosquitto.conf"
+      mode: "0644"
+      owner: "{{ mosquitto_user }}"
+
+- name: Password file exists
+  file:
+    path: /etc/mosquitto/users
+    state: touch
+    owner: "{{ mosquitto_user }}"
+    mode: "0600"
+
+- name: Password file is up to date
+  command: "{{ bin_dir }}/mosquitto_passwd -b /etc/mosquitto/users {{ mosquitto_u_user | quote }} {{ mosquitto_u_password | quote }}"
+  notify:
+    - Restart Mosquitto
+
+- name: Start mosquitto service.
+  systemd:
+    name: mosquitto
+    enabled: true
+    state: restarted
+    daemon_reload: true

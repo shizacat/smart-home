@@ -3,8 +3,8 @@ permit_join: true
 mqtt:
   base_topic: zigbee2mqtt
   server: 'mqtt://localhost'
-  user: {{ mosquitto_user }}
-  password: {{ mosquitto_pass }}
+  user: {{ mosquitto_u_user }}
+  password: {{ mosquitto_u_password }}
 serial:
   port: {{ zigbee_device }}
 frontend:

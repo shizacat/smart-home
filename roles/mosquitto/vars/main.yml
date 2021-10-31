@@ -1,0 +1,9 @@
+---
+mosquitto_user: mosquitto
+
+mosquitto_image_repo: eclipse-mosquitto
+mosquitto_image_tag: 2.0.10
+
+# system
+docker_bin_dir: /usr/bin
+bin_dir: /usr/local/bin

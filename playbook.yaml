@@ -24,6 +24,7 @@
     - ericsysmin.chrony
     - geerlingguy.pip
     - geerlingguy.docker_arm
+    - mosquitto
 
   tasks:
     - name: Install loader for cc253x

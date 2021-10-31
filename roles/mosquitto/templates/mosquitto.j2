@@ -1,0 +1,10 @@
+#!/bin/bash
+
+{{ docker_bin_dir }}/docker run \
+  --restart=on-failure:5 \
+  --net=host \
+  -v /etc/mosquitto:/mosquitto/config:ro \
+  -v /var/lib/mosquitto:/mosquitto/data:rw \
+  -v /var/log/mosquitto:/mosquitto/logs:rw \
+  --name=mosquitto \
+  {{ mosquitto_image_repo }}:{{ mosquitto_image_tag }}

@@ -8,24 +8,6 @@ services:
       - ./nginx/config/nginx.conf:/etc/nginx/conf.d/default.conf
       - ./nginx/web:/web
 
-  # MQTT server
-  mosquitto:
-    image: eclipse-mosquitto:2.0.10
-    network_mode: host
-    restart: always
-    logging:
-      driver: "local"
-      options:
-        max-size: "1m"
-        max-file: "2"
-    #ports:
-    #  - 1883:1883
-    #  - 8883:8883
-    volumes:
-      - ./mosquitto/data:/mosquitto/data
-      - ./mosquitto/logs:/mosquitto/logs
-      - ./mosquitto/conf:/mosquitto/config
-
   zigbee2mqtt:
     image: koenkk/zigbee2mqtt:1.18.3
     network_mode: host
