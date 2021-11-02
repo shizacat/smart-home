@@ -2,10 +2,6 @@
 
 Настройка сервера умного дома. За основу взят HomeBridge. В качестве железа - raspberry pi zero w.
 
-## Зависимости
-
-- https://github.com/geerlingguy/ansible-role-docker_arm@4.1.0
-
 # Setup
 
 ## Setting Raspberry Pi
@@ -39,9 +35,8 @@ python3 -m venv venv
 pip install -r requirements.txt
 
 # don't install this (already in repository)
-# ansible-galaxy collection install community.docker
-#
 # ansible-galaxy role install -r requirements.yml
+# ansible-galaxy collection install -r requirements.yml
 ```
 
 Run script:
@@ -62,7 +57,7 @@ Enter into container and run:
 npm install -g --save homebridge-mqttthing@latest
 ```
 
-## Ссылки
+## Links
 
 - [UART configuration](https://www.raspberrypi.org/documentation/configuration/uart.md)
 - https://gist.github.com/carry0987/372b9fefdd8041d0374f4e08fbf052b1
