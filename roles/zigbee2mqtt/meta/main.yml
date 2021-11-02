@@ -1,0 +1,7 @@
+galaxy_info:
+  author: your name
+  description: zigbee2mqtt server
+  license: license MIT
+  min_ansible_version: 2.1
+  galaxy_tags: []
+dependencies: []

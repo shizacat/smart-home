@@ -25,6 +25,7 @@
     - geerlingguy.pip
     - geerlingguy.docker_arm
     - mosquitto
+    - zigbee2mqtt
 
   tasks:
     - name: Install loader for cc253x

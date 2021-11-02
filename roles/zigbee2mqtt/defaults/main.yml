@@ -1,0 +1,11 @@
+---
+time_zone: "Etc"
+
+zigbee2mqtt_device: "/dev/ttyACM0"
+
+zigbee2mqtt_token: token
+
+zigbee2mqtt_mosquitto_user: user
+zigbee2mqtt_mosquitto_password: user
+
+zigbee2mqtt_port: "8088"

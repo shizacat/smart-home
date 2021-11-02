@@ -1,0 +1,43 @@
+---
+- name: Create directories.
+  file:
+    path: "{{ item.path }}"
+    state: directory
+    recurse: yes
+    owner: root
+    mode: "{{ item.mode }}"
+  loop:
+    - path: "{{ zigbee2mqtt_dir_data }}"
+      mode: "0755"
+
+- name: Copy system files
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dst }}"
+    owner: "{{ item.owner }}"
+    mode: "{{ item.mode }}"
+  loop:
+    - src: zigbee2mqtt.service.j2
+      dst: /etc/systemd/system/zigbee2mqtt.service
+      mode: "0644"
+      owner: root
+    - src: zigbee2mqtt.j2
+      dst: "{{ bin_dir }}/zigbee2mqtt"
+      mode: "0755"
+      owner: root
+
+- name: Create configuration
+  template:
+    src: configuration.yaml.j2
+    dest: "{{ zigbee2mqtt_dir_data }}/configuration.yaml"
+    mode: "0600"
+    owner: root
+  notify:
+    - Restart zigbee2mqtt
+
+- name: Start zigbee2mqtt service.
+  systemd:
+    name: zigbee2mqtt
+    enabled: true
+    state: restarted
+    daemon_reload: true

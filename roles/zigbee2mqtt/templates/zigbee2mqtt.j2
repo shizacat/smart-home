@@ -1,0 +1,12 @@
+#!/bin/bash
+
+{{ docker_bin_dir }}/docker run \
+  --restart=on-failure:5 \
+  --net=host \
+  --privileged \
+  --device {{ zigbee2mqtt_device }}:{{ zigbee2mqtt_device }} \
+  -v /run/udev:/run/udev:ro \
+  -v {{ zigbee2mqtt_dir_data }}:/app/data:rw \
+  -e TZ={{ time_zone }} \
+  --name=zigbee2mqtt \
+  {{ zigbee2mqtt_image_repo }}:{{ zigbee2mqtt_image_tag }}

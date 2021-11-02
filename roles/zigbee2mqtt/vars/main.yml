@@ -1,0 +1,11 @@
+---
+# mosquitto_user: mosquitto
+
+zigbee2mqtt_image_repo: koenkk/zigbee2mqtt
+zigbee2mqtt_image_tag: 1.22.0
+
+zigbee2mqtt_dir_data: /var/lib/zigbee2mqtt
+
+# system
+docker_bin_dir: /usr/bin
+bin_dir: /usr/local/bin

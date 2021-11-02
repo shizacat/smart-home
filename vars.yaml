@@ -6,8 +6,11 @@ time_zone: "Europe/Moscow"
 
 mosquitto_u_user: user
 mosquitto_u_password: DRBhTL2883
+zigbee2mqtt_mosquitto_user: user
+zigbee2mqtt_mosquitto_password: DRBhTL2883
+
 mosquitto_listen: "0.0.0.0"
 
-zigbee_device: /dev/ttyACM0
-
+zigbee2mqtt_device: /dev/ttyACM0
 zigbee2mqtt_token: H65NFqNXPxuXvj9D
+zigbee2mqtt_port: "8088"

@@ -1,0 +1,17 @@
+homeassistant: false
+permit_join: true
+mqtt:
+  base_topic: zigbee2mqtt
+  server: 'mqtt://localhost'
+  user: {{ zigbee2mqtt_mosquitto_user }}
+  password: {{ zigbee2mqtt_mosquitto_password }}
+serial:
+  port: {{ zigbee2mqtt_device }}
+frontend:
+  port: {{ zigbee2mqtt_port }}
+  host: 0.0.0.0
+  auth_token: {{ zigbee2mqtt_token }}
+
+# External files which contains the configs 
+devices: devices.yaml
+groups: groups.yaml
