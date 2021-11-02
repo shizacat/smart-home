@@ -1,3 +1,5 @@
 ---
 roles:
   - name: ericsysmin.chrony
+  - name: geerlingguy.docker_arm
+  - name: geerlingguy.pip

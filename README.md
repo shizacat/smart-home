@@ -39,8 +39,6 @@ python3 -m venv venv
 pip install -r requirements.txt
 
 # don't install this (already in repository)
-# ansible-galaxy install geerlingguy.docker_arm
-# ansible-galaxy install geerlingguy.pip
 # ansible-galaxy collection install community.docker
 #
 # ansible-galaxy role install -r requirements.yml
