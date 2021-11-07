@@ -1,0 +1,16 @@
+---
+
+language: python
+
+services:
+  - docker
+
+install:
+  - pip install -r requirements.txt
+  - pip install testinfra ansible-lint molecule molecule-docker docker
+
+script:
+  - molecule --debug test
+
+notifications:
+  webhooks: https://galaxy.ansible.com/api/v1/notifications/?branch=master

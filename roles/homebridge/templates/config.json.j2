@@ -1,0 +1,23 @@
+{
+  "bridge": {
+    "name": "{{ homebridge_name }}",
+    "username": "{{ homebridge_username }}",
+    "port": {{ homebridge_port }},
+    "pin": "{{ homebridge_pin }}",
+    {% if homebridge_bind %}
+    "bind": {{ homebridge_bind|to_json }},
+    {% endif %}
+    "advertiser": "{{ homebridge_advertiser }}"
+  },
+  "description": "",
+  "accessories": {{ homebridge_accessories|to_json(indent=2) }},
+
+  {% set platforms = [] %}
+  {% for item in homebridge_platforms  %}
+    {{ platforms.append(item | from_json ) }}
+  {% endfor %}
+  {% if homebridge_ui_x_enable %}
+    {{ platforms.append(homebridge_ui_x_config_platform) }}
+  {% endif %}
+  "platforms": {{ platforms | to_json(indent=4) }}
+}

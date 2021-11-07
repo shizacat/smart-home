@@ -14,3 +14,12 @@ mosquitto_listen: "0.0.0.0"
 zigbee2mqtt_device: /dev/ttyACM0
 zigbee2mqtt_token: H65NFqNXPxuXvj9D
 zigbee2mqtt_port: "8088"
+
+homebridge_username: "0E:CA:D7:62:29:63"
+homebridge_pin: 031-45-154
+homebridge_insecure_mode: true
+homebridge_plugins:
+  - name: homebridge-dummy
+    version: 0.5.0
+  - name: homebridge-mqttthing
+    version: 1.1.32

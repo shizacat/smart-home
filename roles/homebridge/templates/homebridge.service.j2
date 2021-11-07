@@ -1,0 +1,26 @@
+# {{ ansible_managed }}
+
+[Unit]
+Description=Node.js HomeKit Server
+Wants=network-online.target
+After=syslog.target network-online.target
+{% if homebridge_systemd_part_of_service %}
+PartOf={{ homebridge_systemd_part_of_service }}
+{% endif %}
+
+[Service]
+Type=simple
+User={{ homebridge_service_user }}
+Environment=PATH={{ homebridge_nodejs_binary }}:{{ ansible_env.PATH }}
+ExecStart={{ homebridge_nodejs_binary }}/homebridge {% if homebridge_insecure_mode %}-I{% endif %} -U {{ homebridge_dir }} {% if homebridge_debug %}-D{% endif %} 
+Restart=on-failure
+RestartSec=10
+KillMode=process
+
+PrivateDevices=true
+ProtectSystem=full
+ProtectHome=true
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target

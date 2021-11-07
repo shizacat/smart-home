@@ -1,0 +1,23 @@
+# {{ ansible_managed }}
+
+[Unit]
+Description=Node.js HomeKit Server Web UI
+Wants=network-online.target
+After=syslog.target network-online.target
+
+[Service]
+Type=simple
+User={{ homebridge_service_user }}
+Environment=PATH={{ homebridge_nodejs_binary }}:{{ ansible_env.PATH }}
+ExecStart={{ homebridge_nodejs_binary }}/homebridge-config-ui-x {% if homebridge_insecure_mode %}-I{% endif %} -U {{ homebridge_dir }}
+Restart=on-failure
+RestartSec=10
+KillMode=process
+
+PrivateDevices=true
+ProtectSystem=full
+ProtectHome=true
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target

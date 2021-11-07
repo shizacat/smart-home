@@ -1,0 +1,15 @@
+homebridge_ui_x_config_platform: |
+  {
+    "name": "Config",
+    "platform": "config",
+    "port": {{ homebridge_ui_x_config_port }},
+    "restart": "sudo -n systemctl restart homebridge",
+    "standalone": true,
+    "log": {
+      "method": "custom",
+      "command": "journalctl -o cat -n 100 -f -u homebridge"
+    }
+  }
+homebridge_ui_x_plugin:
+  name: homebridge-config-ui-x
+  version: "{{ homebridge_ui_x_version }}"

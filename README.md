@@ -63,6 +63,15 @@ npm install -g --save homebridge-mqttthing@latest
 - https://gist.github.com/carry0987/372b9fefdd8041d0374f4e08fbf052b1
 
 
+# Maintance
+
+## Homebridge and Co
+
+```shell
+# Show logs
+journalctl -f -u homebridge.servic
+```
+
 ## Chrony
 
 ```console

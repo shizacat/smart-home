@@ -26,6 +26,7 @@
     - geerlingguy.docker_arm
     - mosquitto
     - zigbee2mqtt
+    - homebridge
 
   tasks:
     - name: Install loader for cc253x

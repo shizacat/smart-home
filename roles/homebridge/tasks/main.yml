@@ -1,0 +1,99 @@
+---
+- name: HomeBridge | Install via npm
+  npm:
+    global: true
+    production: true
+    name: homebridge
+    version: "{{ homebridge_version }}"
+    state: present
+  environment:
+    NPM_CONFIG_UNSAFE_PERM: "true"
+    PATH: "{{ homebridge_nodejs_binary }}:{{ ansible_env.PATH }}"
+
+- name: HomeBridge | Add user
+  user:
+    name: "{{ homebridge_service_user }}"
+    home: "{{ homebridge_dir }}"
+    createhome: true
+    comment: "HomeBridge"
+    groups:
+      - adm
+    append: true
+
+- name: HomeBridge | Sudoers config
+  copy:
+    dest: "/etc/sudoers.d/020_homebridge-nopasswd"
+    content: |
+      {{ homebridge_service_user }} ALL=(ALL) NOPASSWD: ALL
+
+- name: HomeBridge | Create log directory
+  file:
+    path: "{{ homebridge_log_dir }}"
+    state: directory
+    owner: "{{ homebridge_service_user }}"
+
+- name: HomeBridge | Create configuration
+  template:
+    src: "config.json.j2"
+    dest: "{{ homebridge_dir }}/config.json"
+    owner: "{{ homebridge_service_user }}"
+    group: "{{ homebridge_service_user }}"
+    mode: 0444
+    backup: yes
+  notify:
+    - Restart homebridge
+    - Restart homebridge-ui-x
+
+- name: HomeBridge | Create service
+  template:
+    src: "homebridge.service.j2"
+    dest: "/etc/systemd/system/homebridge.service"
+    owner: root
+    group: root
+    mode: 0444
+  notify:
+    - Restart homebridge
+
+- name: HomeBridge | Create service (homebridge-ui-x)
+  template:
+    src: "homebridge-ui-x.service.j2"
+    dest: "/etc/systemd/system/homebridge-ui-x.service"
+    owner: root
+    group: root
+    mode: 0444
+  notify:
+    - Restart homebridge-ui-x
+  when: homebridge_ui_x_enable
+
+- name: HomeBridge | Add homebridge-ui-x to plugins
+  set_fact:
+    homebridge_plugins: "{{ homebridge_plugins + [homebridge_ui_x_plugin] }}"
+  when: homebridge_ui_x_enable
+
+- name: HomeBridge | Install plugins
+  npm:
+    name: "{{ item.name }}"
+    version: "{{ item.version|default('') }}"
+    global: true
+    production: true
+    state: present
+  loop: "{{ homebridge_plugins }}"
+  environment:
+    NPM_CONFIG_UNSAFE_PERM: "true"
+    PATH: "{{ homebridge_nodejs_binary }}:{{ ansible_env.PATH }}"
+  when: homebridge_plugins|length > 0
+  notify:
+    - Restart homebridge
+
+- name: HomeBridge | Start service
+  systemd:
+    name: homebridge.service
+    state: started
+    enabled: true
+
+- name: HomeBridge | Start service (homebridge-ui-x)
+  systemd:
+    name: homebridge-ui-x.service
+    state: started
+    enabled: true
+  when: homebridge_ui_x_enable
