@@ -58,7 +58,7 @@
 
 - name: Start mosquitto service.
   systemd:
-    name: mosquitto
+    name: mosquitto.service
     enabled: true
     state: restarted
     daemon_reload: true

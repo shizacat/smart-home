@@ -1,15 +1,16 @@
 [Unit]
 Description=mosquitto docker wrapper
-Wants=docker.socket
-After=docker.service
+Wants=docker.service
+#After=docker.service
 
 [Service]
+Type=simple
 ExecStartPre=-{{ docker_bin_dir }}/docker rm -f mosquitto
 ExecStart={{ bin_dir }}/mosquitto
 ExecStop={{ docker_bin_dir }}/docker stop mosquitto
 Restart=always
-RestartSec=15s
-TimeoutStartSec=30s
+RestartSec=5s
+TimeoutStartSec=120s
 
 [Install]
 WantedBy=multi-user.target

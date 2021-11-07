@@ -37,7 +37,7 @@
 
 - name: Start zigbee2mqtt service.
   systemd:
-    name: zigbee2mqtt
+    name: zigbee2mqtt.service
     enabled: true
     state: restarted
     daemon_reload: true
