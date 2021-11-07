@@ -24,6 +24,7 @@
     - ericsysmin.chrony
     - geerlingguy.pip
     - geerlingguy.docker_arm
+    - nodejs
     - mosquitto
     - zigbee2mqtt
     - homebridge
