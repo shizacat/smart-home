@@ -1,0 +1,4 @@
+---
+nodejs_version: "14.18.1"
+nodejs_dir: /opt/nodejs
+nodejs_bin: "{{ nodejs_dir }}/bin"
