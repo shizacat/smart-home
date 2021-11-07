@@ -32,6 +32,16 @@
     state: directory
     owner: "{{ homebridge_service_user }}"
 
+- name: HomeBridge | Check config file
+  stat:
+    path: "{{ homebridge_dir }}/config.json"
+  register: stat_config
+
+- name: HomeBridge | Generation pin
+  set_fact:
+    homebridge_pin: "{{9|random}}{{9|random}}{{9|random}}-{{9|random}}{{9|random}}-{{9|random}}{{9|random}}{{9|random}}"
+  when: (not homebridge_pin | bool) and (not stat_config.stat.exists)
+
 - name: HomeBridge | Create configuration
   template:
     src: "config.json.j2"

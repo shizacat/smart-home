@@ -12,7 +12,8 @@ homebridge_nodejs_binary: /opt/nodejs/bin
 homebridge_name: Homebridge
 homebridge_username: CC:22:3D:E3:CE:30
 homebridge_port: 51826
-homebridge_pin: 123-45-678
+# If it don't define, it will be generate random (ex: 123-45-678)
+homebridge_pin:
 homebridge_advertiser: "ciao"
 homebridge_bind: []
 homebridge_accessories: []
