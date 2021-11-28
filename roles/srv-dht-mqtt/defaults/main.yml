@@ -1,6 +1,6 @@
 ---
 # ansible_python_interpreter: "/usr/bin/python3"
-srv_dht_mqtt_version: "1.1"
+srv_dht_mqtt_version: "1.2"
 
 srv_dht_mqtt_config:
   mqtt_host: "127.0.0.1"
