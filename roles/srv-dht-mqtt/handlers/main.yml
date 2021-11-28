@@ -1,0 +1,6 @@
+---
+- name: Restart srv-dht-mqtt
+  systemd:
+    name: srv-dht-mqtt
+    state: restarted
+    daemon_reload: true

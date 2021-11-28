@@ -1,0 +1,15 @@
+[Unit]
+Description=srv-dht-mqtt service
+Wants=network-online.target
+After=syslog.target network-online.target
+
+[Service]
+Type=simple
+EnvironmentFile=/etc/default/srv-dht-mqtt
+ExecStart={{ ansible_python_interpreter }} {{ srv_dht_mqtt_service_path }}
+Restart=always
+RestartSec=5s
+TimeoutStartSec=120s
+
+[Install]
+WantedBy=multi-user.target

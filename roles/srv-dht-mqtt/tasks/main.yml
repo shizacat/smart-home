@@ -1,0 +1,32 @@
+---
+- name: srv-dht-mqtt | Install python packages
+  pip:
+    name: git+https://github.com/shizacat/srv-dht-mqtt
+    version: "{{ srv_dht_mqtt_version }}"
+    extra_args: --upgrade
+
+- name: srv-dht-mqtt | Create config
+  template:
+    dest: "/etc/default/srv-dht-mqtt"
+    src: "srv-dht-mqtt.default.j2"
+    owner: root
+    group: root
+    mode: 0444
+  notify:
+    - Restart srv-dht-mqtt
+
+- name: srv-dht-mqtt | Create service
+  template:
+    src: "srv-dht-mqtt.service.j2"
+    dest: "/etc/systemd/system/srv-dht-mqtt.service"
+    owner: root
+    group: root
+    mode: 0444
+  notify:
+    - Restart srv-dht-mqtt
+
+- name: srv-dht-mqtt | Start service
+  systemd:
+    name: srv-dht-mqtt.service
+    state: started
+    enabled: true

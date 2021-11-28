@@ -1,0 +1,9 @@
+galaxy_info:
+  author: Alexey Matveev
+  description: Service reads data from sensor DHT22/11 and one sends this to MQTT service
+
+  license: MIT
+  min_ansible_version: 2.1
+
+  galaxy_tags: []
+dependencies: []

@@ -1,0 +1,2 @@
+---
+srv_dht_mqtt_service_path: "/usr/local/bin/srv-dht-mqtt.py"

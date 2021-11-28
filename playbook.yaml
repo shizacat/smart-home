@@ -34,3 +34,7 @@
       import_tasks: tasks/soft_install_cc.yaml
     - name: Install HomeBridge and Co
       import_tasks: tasks/soft_install_homebridge_co.yaml
+    - name: Install srv-dht-mqtt
+      include_role:
+        name: srv-dht-mqtt
+      when: srv_dht_mqtt_enable
