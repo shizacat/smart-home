@@ -26,6 +26,10 @@ you must reconfigure Raspberry Pi OS. This can be done by using **raspi-config**
 
 ## Run script ansible
 
+```bash
+ansible-playbook -i inventory playbook.yaml
+```
+
 ### Prepea environment
 
 You need to install package to local host: sshpass, python3-venv.
