@@ -1,6 +1,7 @@
-# Описание
+# Description
 
-Настройка сервера умного дома. За основу взят HomeBridge. В качестве железа - raspberry pi zero w.
+This is setup smart home on Raspberry Pi Zero W.
+The HomeBridge as main application.
 
 # Setup
 
@@ -25,7 +26,7 @@ you must reconfigure Raspberry Pi OS. This can be done by using **raspi-config**
 
 ## Run script ansible
 
-Prepea environment:
+### Prepea environment
 
 You need to install package to local host: sshpass, python3-venv.
 
@@ -39,7 +40,7 @@ pip install -r requirements.txt
 # ansible-galaxy collection install -r requirements.yml
 ```
 
-Run script:
+### Setup
 
 ```bash
 ansible-playbook -i inventory playbook.yaml
@@ -49,7 +50,7 @@ ansible-playbook -i inventory playbook.yaml
 
 ### Install plagin
 
-If he isn't install from UI, you will install inside docker container.
+If he isn't install from UI, you will may to install through console (npm).
 
 Enter into container and run:
 
