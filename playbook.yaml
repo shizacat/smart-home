@@ -13,6 +13,9 @@
     pip_package: python3-pip
 
   pre_tasks:
+    - name: Config RaspberryPi | Serial
+      import_tasks: tasks/raspi_config_serial.yaml
+      when: raspi_config.serial is defined
     - name: Install base package
       import_tasks: tasks/base.yaml
     - name: Disable swap

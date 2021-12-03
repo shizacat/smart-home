@@ -1,4 +1,8 @@
 ---
+# Config RaspberryPi
+raspi_config:
+  serial: True  # Enable serial port
+
 # The folder is to content docker services
 root_directory: "/service/hb"
 # Time zone in which server will be work

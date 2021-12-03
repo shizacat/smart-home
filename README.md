@@ -3,6 +3,10 @@
 This is setup smart home on Raspberry Pi Zero W.
 The HomeBridge as main application.
 
+## Feature
+
+- Enable UART and disable Linux serial console
+
 # Setup
 
 ## Setting Raspberry Pi
@@ -11,24 +15,7 @@ The HomeBridge as main application.
 
 [Raspberry Pi OS](https://www.raspberrypi.org/software/)
 
-### Enable UART and disable Linux serial console
-
-By default, the primary UART is assigned to the Linux console.
-If you wish to use the primary UART for other purposes,
-you must reconfigure Raspberry Pi OS. This can be done by using **raspi-config**:
-
-- Start raspi-config: `sudo raspi-config`.
-- Select option 3 - Interface Options.
-- Select option P6 - Serial Port.
-- At the prompt Would you like a login shell to be accessible over serial? answer `No`
-- At the prompt Would you like the serial port hardware to be enabled? answer `Yes`
-- Exit raspi-config and reboot the Pi for changes to take effect.
-
 ## Run script ansible
-
-```bash
-ansible-playbook -i inventory playbook.yaml
-```
 
 ### Prepea environment
 
@@ -50,18 +37,6 @@ pip install -r requirements.txt
 ansible-playbook -i inventory playbook.yaml
 ```
 
-## Homebridge
-
-### Install plagin
-
-If he isn't install from UI, you will may to install through console (npm).
-
-Enter into container and run:
-
-```bash
-npm install -g --save homebridge-mqttthing@latest
-```
-
 ## Links
 
 - [UART configuration](https://www.raspberrypi.org/documentation/configuration/uart.md)
@@ -75,6 +50,12 @@ npm install -g --save homebridge-mqttthing@latest
 ```shell
 # Show logs
 journalctl -f -u homebridge.servic
+```
+
+### Install plugin
+
+```bash
+npm install -g --save homebridge-mqttthing@latest
 ```
 
 ## Chrony
