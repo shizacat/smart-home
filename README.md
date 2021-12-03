@@ -49,7 +49,7 @@ ansible-playbook -i inventory playbook.yaml
 
 ```shell
 # Show logs
-journalctl -f -u homebridge.servic
+journalctl -f -u homebridge.service
 ```
 
 ### Install plugin
