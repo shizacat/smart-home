@@ -5,7 +5,9 @@ The HomeBridge as main application.
 
 ## Feature
 
-- Enable UART and disable Linux serial console
+- It contains intalled software: homebridge, zigbee2mqtt, mosquitto
+- Support DHT sensors
+- Enable UART (disable Linux serial console)
 
 # Setup
 
@@ -14,6 +16,10 @@ The HomeBridge as main application.
 ### Install OS
 
 [Raspberry Pi OS](https://www.raspberrypi.org/software/)
+
+### Setup WiFi
+
+### Enable SSH
 
 ## Run script ansible
 
