@@ -1,4 +1,6 @@
-# Description
+# Smart Home
+
+Intro
 
 This is setup smart home on Raspberry Pi Zero W.
 The HomeBridge as main application.
@@ -6,7 +8,7 @@ The HomeBridge as main application.
 ## Feature
 
 - It contains intalled software: homebridge, zigbee2mqtt, mosquitto
-- Support DHT sensors
+- Support DHT sensors - Digital-Humidity-Temperature
 - Enable UART (disable Linux serial console)
 
 # Setup
