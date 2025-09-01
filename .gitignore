@@ -2,3 +2,4 @@ venv/*
 playbook.retry
 .venv/
 TODO.md
+.DS_Store
