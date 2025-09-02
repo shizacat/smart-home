@@ -1,29 +1,29 @@
 # Configuring RaspberryPi
 # P6 Serial
-## Check, > cat /boot/cmdline.txt
+## Check, > cat /boot/firmware/cmdline.txt
 
-- name: RaspPi.Serial | Get serial status
-  shell: "raspi-config nonint get_serial"
-  register: serial_status
+- name: RaspPi.Serial | Get serial console status
+  shell: "raspi-config nonint get_serial_cons"
+  register: serial_cons_status
   changed_when: False
 
 - name: RaspPi.Serial | Get serialHW status
   shell: "raspi-config nonint get_serial_hw"
-  register: serialhw_status
+  register: serial_hw_status
   changed_when: False
 
-- name: RaspPi.Serial | Print serial status
+- name: RaspPi.Serial | Print serial cons status
   debug:
-    msg: "Serial status is: {{ serial_status.stdout }}"
+    msg: "Serial status is: {{ serial_cons_status.stdout }}"
 
-- name: RaspPi.Serial | Print serialHW status
+- name: RaspPi.Serial | Print serial HW status
   debug:
-    msg: "SerialHW status is: {{ serialhw_status.stdout }}"
+    msg: "SerialHW status is: {{ serial_hw_status.stdout }}"
 
 - name: RaspPi.Serial | Enable serial port
-  shell: "raspi-config nonint do_serial 1"
-  when: (raspi_config.serial == True) and (serial_status.stdout != '1')
+  shell: "raspi-config nonint do_serial_hw 1"
+  when: (raspi_config.serial == True) and (serial_hw_status.stdout != '1')
 
 - name: RaspPi.Serial | Disable serial port
-  shell: "raspi-config nonint do_serial 0"
-  when: (raspi_config.serial == False) and (serial_status.stdout != '0')
+  shell: "raspi-config nonint do_serial_hw 0"
+  when: (raspi_config.serial == False) and (serial_hw_status.stdout != '0')
