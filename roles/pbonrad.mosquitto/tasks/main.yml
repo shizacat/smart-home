@@ -22,16 +22,27 @@
     state: present
   become: true
 
-# - name: Configure Mosquitto
-#   template:
-#     src: mosquitto.conf.j2
-#     dest: /etc/mosquitto/mosquitto.conf
-#   become: true
-#   notify: Restart Mosquitto
+- name: Configure Mosquitto password file
+  template:
+    src: passwd.j2
+    dest: "{{ mosquitto_config.password_file }}"
+    owner: mosquitto
+    group: mosquitto
+    mode: "0640"
+  become: true
+  when: mosquitto_password_file_users | length > 0
+  notify: Restart Mosquitto
 
-# - name: Start Mosquitto as service and enable to start on boot
-#   service:
-#     name: mosquitto
-#     state: started
-#     enabled: yes
-#   become: true
+- name: Configure Mosquitto
+  template:
+    src: mosquitto.conf.j2
+    dest: /etc/mosquitto/mosquitto.conf
+  become: true
+  notify: Restart Mosquitto
+
+- name: Start Mosquitto as service and enable to start on boot
+  service:
+    name: mosquitto
+    state: started
+    enabled: yes
+  become: true
