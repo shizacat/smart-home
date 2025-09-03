@@ -8,12 +8,14 @@ root_directory: "/service/hb"
 # Time zone in which server will be work
 time_zone: "Europe/Moscow"
 
-mosquitto_u_user: user
-mosquitto_u_password: DRBhTL2883
-zigbee2mqtt_mosquitto_user: user
-zigbee2mqtt_mosquitto_password: DRBhTL2883
+# mosquitto_u_user: user
+# mosquitto_u_password: DRBhTL2883
+# zigbee2mqtt_mosquitto_user: user
+# zigbee2mqtt_mosquitto_password: DRBhTL2883
 
+# =====================================================
 # Config mosquitto
+# =====================================================
 
 # Configuration options
 mosquitto_config:
@@ -36,9 +38,39 @@ mosquitto_users:
   - username: "user"
     password: "DRBhTL2883"
 
-zigbee2mqtt_device: /dev/ttyACM0
-zigbee2mqtt_token: H65NFqNXPxuXvj9D
-zigbee2mqtt_port: "8088"
+# =====================================================
+# Config ZigBee to MQTT
+# =====================================================
+
+# version
+zigbee_version: 2.6.1
+# allow new devices to join
+zigbee_permit_join: true
+# serial port settings
+zigbee_serial:
+  port: /dev/ttyS0
+  baudrate: 115200
+  rtscts: false
+# MQTT settings
+zigbee_mqtt:
+  base_topic: zigbee2mqtt
+  server: mqtt://localhost
+  # user:password for mosquitto connect
+  user: "user"
+  password: "DRBhTL2883"
+# frontend settings
+zigbee_frontend:
+  port: 8088
+  host: 0.0.0.0
+  auth_token: "H65NFqNXPxuXvj9D"
+
+# zigbee2mqtt_device: /dev/ttyACM0
+# zigbee2mqtt_token: H65NFqNXPxuXvj9D
+# zigbee2mqtt_port: "8088"
+
+# =====================================================
+# Config HomeBridge
+# =====================================================
 
 homebridge_username: "0E:CA:D7:62:29:63"
 homebridge_pin: 031-45-154
