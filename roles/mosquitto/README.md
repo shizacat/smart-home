@@ -1,38 +1,101 @@
-Role Name
-=========
+Mosquitto MQTT Broker Role
+==========================
 
-A brief description of the role goes here.
+Ansible role that installs and configures Mosquitto MQTT broker as a systemd service running in a Docker container.
 
-Requirements
-------------
+## Overview
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+This role sets up Mosquitto MQTT broker using the official Eclipse Mosquitto Docker image, managed by systemd. It provides:
 
-Role Variables
---------------
+- Systemd service management with automatic restarts
+- Docker container deployment for easy updates and isolation
+- Persistent configuration, data, and log storage
+- Secure authentication with user/password protection
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+## Requirements
 
-Dependencies
-------------
+- Docker installed on the target system
+- Ansible 2.9 or higher
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+## Role Variables
 
-Example Playbook
-----------------
+### Default Variables (defaults/main.yml)
+```yaml
+mosquitto_u_user: user          # Default username
+mosquitto_u_password: user      # Default password
+mosquitto_listen: "127.0.0.1"  # Listen address
+mosquitto_port: "1883"         # MQTT port
+```
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+### Internal Variables (vars/main.yml)
+```yaml
+mosquitto_user: mosquitto           # System user
+mosquitto_image_repo: eclipse-mosquitto  # Docker image
+mosquitto_image_tag: 2.0.10         # Image version
+docker_bin_dir: /usr/bin            # Docker binary location
+bin_dir: /usr/local/bin             # Scripts location
+```
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+## Usage
 
-License
--------
+Include the role in your playbook:
 
-BSD
+```yaml
+- hosts: mqtt_servers
+  roles:
+    - mosquitto
+```
 
-Author Information
-------------------
+### Custom Configuration
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+Override default variables:
+
+```yaml
+- hosts: mqtt_servers
+  roles:
+    - role: mosquitto
+      vars:
+        mosquitto_u_user: "admin"
+        mosquitto_u_password: "secure_password"
+        mosquitto_listen: "0.0.0.0"
+        mosquitto_port: "1883"
+```
+
+## Service Management
+
+The role creates a systemd service (`mosquitto.service`) that:
+- Starts the Mosquitto Docker container
+- Automatically restarts on failure
+- Manages container lifecycle
+- Provides proper logging and monitoring
+
+### Service Commands
+```bash
+# Start service
+sudo systemctl start mosquitto
+
+# Stop service  
+sudo systemctl stop mosquitto
+
+# Check status
+sudo systemctl status mosquitto
+
+# View logs
+sudo journalctl -u mosquitto -f
+```
+
+## Files and Directories
+
+- `/etc/mosquitto/` - Configuration files
+- `/var/lib/mosquitto/` - Persistent data
+- `/var/log/mosquitto/` - Log files
+- `/etc/systemd/system/mosquitto.service` - Systemd service
+- `/usr/local/bin/mosquitto` - Docker wrapper script
+
+## License
+
+MIT
+
+## Author Information
+
+This role was created for smart home MQTT broker deployment.
