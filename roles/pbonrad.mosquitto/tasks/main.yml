@@ -25,17 +25,6 @@
   set_fact:
     mosquitto_config_merged: "{{ mosquitto_config_default | combine(mosquitto_config|default({}), recursive=True) }}"
 
-# - name: Configure Mosquitto password file
-#   template:
-#     src: passwd.j2
-#     dest: "{{ mosquitto_config_merged.password_file }}"
-#     owner: mosquitto
-#     group: mosquitto
-#     mode: "0640"
-#   become: true
-#   when: mosquitto_users | length > 0
-#   notify: Restart Mosquitto
-
 - name: Ensure mosquitto passwd file exists
   file:
     path: "{{ mosquitto_config_merged.password_file }}"
