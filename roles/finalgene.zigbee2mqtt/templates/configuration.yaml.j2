@@ -1,0 +1,26 @@
+---
+permit_join: {{ zigbee_permit_join }}
+mqtt: {{ zigbee_mqtt_defaults | combine(zigbee_mqtt) }}
+advanced: {{ zigbee_advanced_defaults | combine(zigbee_advanced) }}
+serial: {{ zigbee_serial_defaults | combine(zigbee_serial) }}
+frontend: {{ zigbee_frontend_defaults | combine(zigbee_frontend) if zigbee_frontend is mapping else zigbee_frontend}}
+ota: {{ zigbee_ota_defaults | combine(zigbee_ota) }}
+{% if zigbee_device_options is defined %}
+device_options: {{ zigbee_device_options }}
+{% endif %}
+{% if zigbee_blocklist is defined %}
+blocklist: {{ zigbee_blocklist }}
+{% endif %}
+{% if zigbee_passlist is defined %}
+passlist: {{ zigbee_passlist }}
+{% endif %}
+{% if _zigbee_external_converters is defined %}
+external_converters: {{ _zigbee_external_converters }}
+{% endif %}
+{% if zigbee_map_options is defined %}
+map_options: {{ zigbee_map_options }}
+{% endif %}
+availability: {{ zigbee_availability if zigbee_availability is defined else false}}
+homeassistant: {{ zigbee_homeassistant if zigbee_homeassistant is defined else false}}
+devices: devices.yaml
+groups: groups.yaml

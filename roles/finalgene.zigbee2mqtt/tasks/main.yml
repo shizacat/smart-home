@@ -1,0 +1,156 @@
+---
+- name: Create zigbee2mqtt user
+  ansible.builtin.user:
+    name: "{{ zigbee_user }}"
+    groups: "{{ zigbee_user_groups }}"
+    append: "{{ zigbee_user_append }}"
+
+- name: Create zigbee2mqtt directory
+  ansible.builtin.file:
+    path: "{{ zigbee_dir }}"
+    state: directory
+    owner: "{{ zigbee_user }}"
+    mode: "0700"
+
+- name: Ensure pnpm is installed
+  community.general.npm:
+    name: pnpm
+    global: true
+
+- name: Check for existing data directory
+  register: _data_dir
+  ansible.builtin.stat:
+    path: "{{ zigbee_data_dir }}"
+    get_checksum: false
+
+- name: Backup data directory
+  when: _data_dir.stat.exists
+  block:
+    - name: Create temporary file
+      register: _backup_file
+      ansible.builtin.tempfile:
+        path: '~'
+
+    - name: Create backup
+      register: _backup
+      community.general.archive:
+        path: "{{ zigbee_data_dir }}"
+        dest: "{{ _backup_file.path }}"
+        mode: "0600"
+
+- name: Patch /root/.gitconfig
+  # This invocation (without --add, with the dir name twice) is idempotent
+  changed_when: false
+  # noqa command-instead-of-module
+  ansible.builtin.command:
+    cmd: git config --global safe.directory {{ zigbee_dir }} {{ zigbee_dir }}
+
+- name: Clone zigbee2mqtt repository
+  register: _repo
+  notify: Restart zigbee2mqtt
+  changed_when: _repo.before != _repo.after
+  ansible.builtin.git:
+    repo: "{{ zigbee_repository }}"
+    depth: 1
+    dest: "{{ zigbee_dir }}"
+    update: true
+    force: true
+    version: "{{ zigbee_version }}"
+
+- name: Install zigbee2mqtt
+  when: _repo is changed # noqa: no-handler
+  block:
+    - name: Run install
+      notify: Restart zigbee2mqtt
+      register: _install_result
+      changed_when: _install_result.rc == 0
+      ansible.builtin.command:
+        chdir: "{{ zigbee_dir }}"
+        cmd: pnpm install --frozen-lockfile
+
+    - name: Run build
+      notify: Restart zigbee2mqtt
+      register: _build_result
+      changed_when: _build_result.rc == 0
+      ansible.builtin.command:
+        chdir: "{{ zigbee_dir }}"
+        cmd: pnpm run build
+
+- name: Restore backup of data directory
+  when:
+    - _data_dir.stat.exists
+    - _backup_file is succeeded
+  block:
+    - name: Restore backup
+      when: _backup is succeeded
+      ansible.builtin.unarchive:
+        src: "{{ _backup_file.path }}"
+        dest: "{{ zigbee_data_dir }}"
+        remote_src: true
+        extra_opts:
+          - --strip-components=1
+
+    - name: Remove backup
+      ansible.builtin.file:
+        path: "{{ _backup_file.path }}"
+        state: absent
+
+- name: Set permissions for zigbee2mqtt
+  loop:
+    - "{{ zigbee_dir }}/dist"
+    - "{{ zigbee_data_dir }}"
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    recurse: true
+    owner: "{{ zigbee_user }}"
+
+- name: Generate network key
+  no_log: true
+  notify: Restart zigbee2mqtt
+  ansible.builtin.template:
+    src: network_key.yaml.j2
+    dest: "{{ zigbee_dir }}/data/network_key.yaml"
+    owner: "{{ zigbee_user }}"
+    group: "{{ zigbee_user }}"
+    mode: "0600"
+    force: "{{ zigbee_generate_new_network_key }}"
+
+- name: Manage external converters
+  when: zigbee_external_converters is defined
+  loop: "{{ zigbee_external_converters }}"
+  ansible.builtin.include_tasks: external_converter.yml
+
+- name: Install configuration template
+  notify: Restart zigbee2mqtt
+  ansible.builtin.template:
+    src: configuration.yaml.j2
+    dest: "{{ zigbee_dir }}/data/configuration.yaml"
+    owner: "{{ zigbee_user }}"
+    mode: "0600"
+
+- name: Ensure necessary config files exists
+  loop:
+    - devices.yaml
+    - groups.yaml
+  ansible.builtin.file:
+    path: "{{ zigbee_dir }}/data/{{ item }}"
+    state: touch
+    owner: "{{ zigbee_user }}"
+    mode: "0600"
+
+- name: Install systemd service template
+  notify:
+    - Reload zigbee2mqtt daemon config
+    - Start zigbee2mqtt service
+  ansible.builtin.template:
+    src: zigbee2mqtt.service.j2
+    dest: /etc/systemd/system/zigbee2mqtt.service
+    owner: "{{ zigbee_user }}"
+    mode: "0644"
+
+- name: Install backup script template
+  ansible.builtin.template:
+    src: zigbee2mqtt-backup.j2
+    dest: /usr/local/bin/zigbee2mqtt-backup
+    mode: "0755"

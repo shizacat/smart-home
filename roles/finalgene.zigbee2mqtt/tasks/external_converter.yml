@@ -1,0 +1,21 @@
+---
+- name: Existing external converter
+  when: item.state | default('present') == 'present'
+  block:
+    - name: Create external converter file
+      notify: Restart zigbee2mqtt
+      ansible.builtin.copy:
+        dest: "{{ zigbee_dir }}/data/{{ item.name }}.js"
+        content: "{{ item.script }}"
+        owner: "{{ zigbee_user }}"
+        mode: "0600"
+    - name: Build list of external converters
+      ansible.builtin.set_fact:
+        _zigbee_external_converters: "{{ _zigbee_external_converters | default([]) + [ item.name ~ '.js' ] }}"
+
+- name: Remove external converter file
+  notify: Restart zigbee2mqtt
+  when: item.state | default('present') == 'absent'
+  ansible.builtin.file:
+    dest: "{{ zigbee_dir }}/data/{{ item.name }}.js"
+    state: absent
