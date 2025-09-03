@@ -31,23 +31,26 @@ The HomeBridge as main application.
 
 You need to install package to local host: sshpass, python3-venv.
 
-requirements:
+Requirements:
 - python3
 - uv
 
 ```bash
 uv venv
 uv pip install -r requirements.txt
-. ./.venv/bin/activate
+
+# If usage 'uv' activation don't need
+# . ./.venv/bin/activate
+
 # don't install this (already in repository)
-# ansible-galaxy role install -r requirements.yml
-# ansible-galaxy collection install -r requirements.yml
+# uv run ansible-galaxy role install -r requirements.yml
+# uv run ansible-galaxy collection install -r requirements.yml
 ```
 
 ### Setup
 
 ```bash
-ansible-playbook -i inventory playbook.yaml
+uv run ansible-playbook -i inventory playbook.yaml
 ```
 
 ## Links
