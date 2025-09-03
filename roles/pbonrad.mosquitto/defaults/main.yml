@@ -2,27 +2,28 @@
 # url
 mosquitto_debian_url_base: "https://repo.mosquitto.org/debian"
 
-# Configuration options
-mosquitto_config:
+# Configuration options, default values.
+# You can override them through mosquitto_config variable.
+mosquitto_config_default:
   # General configuration
-  mosquitto_pid_file: "/var/run/mosquitto.pid"
+  mosquitto_pid_file: "/var/run/mosquitto/mosquitto.pid"
   per_listener_settings: false
   allow_zero_length_clientid: true
   auto_id_prefix: "auto-"
   check_retain_source: true
-  max_inflight_bytes: 0
-  max_inflight_messages: 20
-  max_keepalive: 65535
-  max_packet_size: 0
-  max_queued_bytes: 0
-  max_qos: 2
-  max_queued_messages: 1000
-  memory_limit: 0
-  message_size_limit: 0
+  # max_inflight_bytes: 0
+  # max_inflight_messages: 20
+  # max_keepalive: 65535
+  # max_packet_size: 0
+  # max_queued_bytes: 0
+  # max_qos: 2
+  # max_queued_messages: 1000
+  # memory_limit: 0
+  # message_size_limit: 0
   queue_qos0_messages: false
   retain_available: true
   set_tcp_nodelay: false
-  sys_interval: 10
+  # sys_interval: 10
   upgrade_outgoing_qos: false
   user: "mosquitto"
 
@@ -43,7 +44,7 @@ mosquitto_config:
   # Logging
   # Use "log_dest none" if you wish to disable logging.
   # The file destination "log_dest file /var/log/mosquitto/mosquitto.log"
-  log_dest: "none"
+  log_dest: "file /var/log/mosquitto/mosquitto.log"
   log_types:
     - "error"
     - "warning"
@@ -61,4 +62,4 @@ mosquitto_config:
 # Example:
   # - username: "user1"
   #   password: "pass1"
-mosquitto_password_file_users: []
+mosquitto_users: []
