@@ -13,7 +13,28 @@ mosquitto_u_password: DRBhTL2883
 zigbee2mqtt_mosquitto_user: user
 zigbee2mqtt_mosquitto_password: DRBhTL2883
 
-mosquitto_listen: "0.0.0.0"
+# Config mosquitto
+
+# Configuration options
+mosquitto_config:
+  # Listeners
+  listeners:
+    - port: 1883
+      protocol: "mqtt"
+      max_connections: -1
+
+  # Persistence
+  autosave_on_changes: false
+  persistence: false
+
+  # Security
+  allow_anonymous: false
+  password_file: "/etc/mosquitto/passwd"
+
+# Password file content
+mosquitto_users:
+  - username: "user"
+    password: "DRBhTL2883"
 
 zigbee2mqtt_device: /dev/ttyACM0
 zigbee2mqtt_token: H65NFqNXPxuXvj9D
