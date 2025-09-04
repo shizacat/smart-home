@@ -12,10 +12,10 @@
     owner: "{{ zigbee_user }}"
     mode: "0700"
 
-- name: Ensure pnpm is installed
-  community.general.npm:
-    name: pnpm
-    global: true
+# - name: Ensure pnpm is installed
+#   community.general.npm:
+#     name: pnpm
+#     global: true
 
 - name: Check for existing data directory
   register: _data_dir
@@ -57,6 +57,25 @@
     force: true
     version: "{{ zigbee_version }}"
 
+- name: Install dependencies
+  when: _repo is changed # noqa: no-handler
+  block:
+    - name: Install esbuild-wasm
+      ansible.builtin.command:
+        chdir: "{{ zigbee_dir }}"
+        cmd: pnpm add esbuild-wasm
+      register: _esbuild_result
+      changed_when: _esbuild_result.rc == 0
+      notify: Restart zigbee2mqtt
+
+    - name: Install typescript
+      ansible.builtin.command:
+        chdir: "{{ zigbee_dir }}"
+        cmd: pnpm add -D typescript
+      register: _ts_result
+      changed_when: _ts_result.rc == 0
+      notify: Restart zigbee2mqtt
+
 - name: Install zigbee2mqtt
   when: _repo is changed # noqa: no-handler
   block:
@@ -66,7 +85,7 @@
       changed_when: _install_result.rc == 0
       ansible.builtin.command:
         chdir: "{{ zigbee_dir }}"
-        cmd: pnpm install --frozen-lockfile
+        cmd: pnpm install --frozen-lockfile --prod --no-optional
 
     - name: Run build
       notify: Restart zigbee2mqtt
