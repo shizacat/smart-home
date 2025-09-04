@@ -6,6 +6,7 @@
       - vim
       - htop
       - screen
+      - git
 
 - name: Base | Set timezone
   community.general.timezone:
