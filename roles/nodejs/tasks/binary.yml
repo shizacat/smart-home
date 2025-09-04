@@ -17,3 +17,15 @@
     dest: /etc/profile.d/node-path.sh
     content: "PATH=$PATH:{{ nodejs_dir }}/bin"
     mode: "0644"
+
+- name: Node.js | Add symlink to /usr/bin for node, npm, npx, corepack
+  file:
+    src: "{{ nodejs_dir }}/bin/{{ item }}"
+    dest: /usr/bin/{{ item }}
+    state: link
+    force: yes
+  loop:
+    - node
+    - npm
+    - npx
+    - corepack

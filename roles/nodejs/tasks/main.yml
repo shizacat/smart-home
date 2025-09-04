@@ -26,3 +26,7 @@
 - name: Node.js | Display installation success
   debug:
     msg: "Node.js {{ node_version_check.stdout }} successfully installed via {{ nodejs_installation_method }} method"
+
+- name: Node.js | Corepack enable pnpm
+  command: "{{ (nodejs_installation_method == 'binary') | ternary(nodejs_bin ~ '/corepack', 'corepack') }} enable pnpm"
+  when: nodejs_corepack_enable_pnpm
