@@ -39,6 +39,13 @@ mosquitto_users:
     password: "DRBhTL2883"
 
 # =====================================================
+# Config Node.js
+# =====================================================
+nodejs_installation_method: "binary"
+nodejs_version: "22.19.0"
+nodejs_corepack_enable_pnpm: true
+
+# =====================================================
 # Config ZigBee to MQTT
 # =====================================================
 
