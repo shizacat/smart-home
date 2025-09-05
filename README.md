@@ -11,6 +11,8 @@ The HomeBridge as main application.
 - Support DHT sensors - Digital-Humidity-Temperature
 - Enable UART (disable Linux serial console)
 
+- Сервер времени (NTP) - systemd-timesyncd
+
 # Setup
 
 ## Setting Raspberry Pi
@@ -29,20 +31,26 @@ The HomeBridge as main application.
 
 You need to install package to local host: sshpass, python3-venv.
 
+Requirements:
+- python3
+- uv
+
 ```bash
-python3 -m venv venv
-. venv/bin/activate
-pip install -r requirements.txt
+uv venv
+uv pip install -r requirements.txt
+
+# If usage 'uv' activation don't need
+# . ./.venv/bin/activate
 
 # don't install this (already in repository)
-# ansible-galaxy role install -r requirements.yml
-# ansible-galaxy collection install -r requirements.yml
+# uv run ansible-galaxy role install -r requirements.yml
+# uv run ansible-galaxy collection install -r requirements.yml
 ```
 
 ### Setup
 
 ```bash
-ansible-playbook -i inventory playbook.yaml
+uv run ansible-playbook -i inventory playbook.yaml
 ```
 
 ## Links
@@ -66,9 +74,17 @@ journalctl -f -u homebridge.service
 npm install -g --save homebridge-mqttthing@latest
 ```
 
-## Chrony
+## NTP
 
-```console
-# Check status
-chronyc tracking
+```bash
+# Проверка состояния службы
+timedatectl status
+# Более подробная служебная информация
+timedatectl timesync-status
 ```
+
+https://wiki.archlinux.org/title/Systemd-timesyncd_(%D0%A0%D1%83%D1%81%D1%81%D0%BA%D0%B8%D0%B9)
+
+## Setup accessories
+
+MQTTthing accessories: https://github.com/arachnetech/homebridge-mqttthing/blob/master/docs/Accessories.md

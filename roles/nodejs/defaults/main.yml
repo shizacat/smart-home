@@ -1,4 +1,8 @@
 ---
-nodejs_version: "14.18.1"
+# Method of installation. Can be "repository" or "binary"
+nodejs_installation_method: "binary"
+nodejs_version: "22.x"
 nodejs_dir: /opt/nodejs
 nodejs_bin: "{{ nodejs_dir }}/bin"
+
+nodejs_corepack_enable_pnpm: true

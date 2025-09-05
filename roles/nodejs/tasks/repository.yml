@@ -1,0 +1,109 @@
+---
+- name: Node.js | Check if system is Debian-based
+  fail:
+    msg: "Repository installation method is only supported on Debian-based systems"
+  when: ansible_facts['os_family'] != 'Debian'
+
+- name: Node.js | Install prerequisites
+  apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg
+    state: present
+    update_cache: yes
+
+- name: Node.js | Ensure keyrings directory exists
+  file:
+    path: /usr/share/keyrings
+    state: directory
+    mode: '0755'
+
+# If you want to ensure a clean state, uncomment the following task
+# - name: Node.js | Remove existing NodeSource files if any
+#   file:
+#     path: "{{ item }}"
+#     state: absent
+#   loop:
+#     - /usr/share/keyrings/nodesource.gpg
+#     - /etc/apt/sources.list.d/nodesource.list
+#     - /etc/apt/preferences.d/nsolid
+#     - /etc/apt/preferences.d/nodejs
+
+- name: Node.js | Download and import NodeSource signing key
+  shell: |
+    curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /usr/share/keyrings/nodesource.gpg
+  args:
+    creates: /usr/share/keyrings/nodesource.gpg
+
+- name: Node.js | Set correct permissions on GPG key
+  file:
+    path: /usr/share/keyrings/nodesource.gpg
+    mode: '0644'
+
+- name: Node.js | Get system architecture
+  setup:
+    filter: ansible_architecture
+  register: arch_result
+
+- name: Get dpkg architecture
+  command: dpkg --print-architecture
+  register: dpkg_arch
+  changed_when: false
+
+- name: Node.js | Validate architecture support
+  fail:
+    msg: "Unsupported architecture: {{ dpkg_arch.stdout }}. Only amd64, arm64, and armhf are supported."
+  when: dpkg_arch.stdout not in ['amd64', 'arm64', 'armhf']
+
+
+
+# - name: Node.js | Validate architecture support
+#   fail:
+#     msg: "Unsupported architecture: {{ arch_result.ansible_facts.ansible_architecture }}. Only amd64, arm64, and armhf are supported."
+#   when: arch_result.ansible_facts.ansible_architecture not in ['x86_64', 'aarch64', 'armv7l']
+
+# - name: Node.js | Map architecture names
+#   set_fact:
+#     nodesource_arch: >-
+#       {% if arch_result.ansible_facts.ansible_architecture == 'x86_64' %}amd64
+#       {% elif arch_result.ansible_facts.ansible_architecture == 'aarch64' %}arm64
+#       {% elif arch_result.ansible_facts.ansible_architecture == 'armv7l' %}armhf
+#       {% else %}{{ arch_result.ansible_facts.ansible_architecture }}{% endif %}
+
+- name: Node.js | Configure NodeSource repository
+  copy:
+    dest: /etc/apt/sources.list.d/nodesource.list
+    content: "deb [arch={{ dpkg_arch.stdout }} signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/node_{{ nodejs_version }} nodistro main"
+
+- name: Node.js | Configure N|solid preferences
+  copy:
+    dest: /etc/apt/preferences.d/nsolid
+    content: |
+      Package: nsolid
+      Pin: origin deb.nodesource.com
+      Pin-Priority: 600
+
+- name: Node.js | Configure Node.js preferences
+  copy:
+    dest: /etc/apt/preferences.d/nodejs
+    content: |
+      Package: nodejs
+      Pin: origin deb.nodesource.com
+      Pin-Priority: 600
+
+- name: Node.js | Update package cache
+  apt:
+    update_cache: yes
+
+- name: Node.js | Install Node.js
+  apt:
+    name: nodejs
+    state: present
+
+- name: Node.js | Display installation instructions for N|solid
+  debug:
+    msg: |
+      Node.js installed successfully from NodeSource repository.
+      To install N|solid Runtime (Node.js alternative), run: apt-get install nsolid -y

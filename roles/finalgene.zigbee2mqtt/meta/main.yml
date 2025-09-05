@@ -1,0 +1,22 @@
+---
+galaxy_info:
+  role_name: zigbee2mqtt
+  namespace: finalgene
+  author: Frank Giesecke
+  description: zigbee2mqtt on Raspbian
+  company: final gene
+  license: BSD
+  min_ansible_version: "2.13"
+  platforms:
+    - name: Debian
+      versions:
+        - bullseye
+        - bookworm
+  galaxy_tags:
+    - zigbee2mqtt
+    - raspbian
+    - raspberrypi
+    - zigbee
+    - mqtt
+
+dependencies: []

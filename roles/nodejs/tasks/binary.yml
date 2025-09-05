@@ -1,0 +1,31 @@
+---
+- name: Node.js | Check binary directory
+  file:
+    path: "{{ nodejs_dir }}"
+    state: directory
+    recurse: yes
+
+- name: Node.js | Download and untar binary
+  unarchive:
+    src: "https://unofficial-builds.nodejs.org/download/release/v{{ nodejs_version }}/node-v{{ nodejs_version }}-linux-armv6l.tar.gz"
+    dest: "{{ nodejs_dir }}"
+    remote_src: yes
+    extra_opts: [--strip-components=1]
+
+- name: Node.js | Add bin dir to system-wide $PATH
+  copy:
+    dest: /etc/profile.d/node-path.sh
+    content: "PATH=$PATH:{{ nodejs_dir }}/bin"
+    mode: "0644"
+
+- name: Node.js | Add symlink to /usr/bin for node, npm, npx, corepack
+  file:
+    src: "{{ nodejs_dir }}/bin/{{ item }}"
+    dest: /usr/bin/{{ item }}
+    state: link
+    force: yes
+  loop:
+    - node
+    - npm
+    - npx
+    - corepack

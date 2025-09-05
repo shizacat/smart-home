@@ -1,8 +1,13 @@
 ---
 roles:
-  - name: ericsysmin.chrony
-  - name: geerlingguy.docker_arm
-  - name: geerlingguy.pip
+  - name: finalgene.zigbee2mqtt
+    version: 4.0.0
+  # - name: ericsysmin.chrony
+  # - name: geerlingguy.docker_arm
+  # - name: geerlingguy.pip
+  # Modificated from pbonrad.mosquitto
+  # Don't update
+  # - name: pbonrad.mosquitto
 
-collections:
-  - name: community.docker
+# collections:
+  # - name: community.docker

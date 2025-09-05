@@ -8,27 +8,88 @@ root_directory: "/service/hb"
 # Time zone in which server will be work
 time_zone: "Europe/Moscow"
 
-mosquitto_u_user: user
-mosquitto_u_password: DRBhTL2883
-zigbee2mqtt_mosquitto_user: user
-zigbee2mqtt_mosquitto_password: DRBhTL2883
+# mosquitto_u_user: user
+# mosquitto_u_password: DRBhTL2883
 
-mosquitto_listen: "0.0.0.0"
+# =====================================================
+# Config mosquitto
+# =====================================================
 
-zigbee2mqtt_device: /dev/ttyACM0
-zigbee2mqtt_token: H65NFqNXPxuXvj9D
-zigbee2mqtt_port: "8088"
+# Configuration options
+mosquitto_config:
+  # Listeners
+  listeners:
+    - port: 1883
+      protocol: "mqtt"
+      max_connections: -1
+
+  # Persistence
+  autosave_on_changes: false
+  persistence: false
+
+  # Security
+  allow_anonymous: false
+  password_file: "/etc/mosquitto/passwd"
+
+# Password file content
+mosquitto_users:
+  - username: "user"
+    password: "DRBhTL2883"
+
+# =====================================================
+# Config Node.js
+# =====================================================
+nodejs_installation_method: "binary"
+nodejs_version: "22.19.0"
+nodejs_corepack_enable_pnpm: true
+
+# =====================================================
+# Config ZigBee to MQTT
+# =====================================================
+
+zigbee_version: 2.6.1
+# allow new devices to join
+zigbee_permit_join: true
+# serial port settings
+zigbee_serial:
+  port: /dev/ttyS0
+  baudrate: 115200
+  rtscts: false
+# MQTT settings
+zigbee_mqtt:
+  base_topic: zigbee2mqtt
+  server: mqtt://localhost
+  # user:password for mosquitto connect
+  user: "user"
+  password: "DRBhTL2883"
+# frontend settings
+zigbee_frontend:
+  port: 8088
+  host: 0.0.0.0
+  auth_token: "H65NFqNXPxuXvj9D"
+
+# =====================================================
+# Config HomeBridge
+# =====================================================
+# https://github.com/mpatfield/homebridge-dummy
+# https://github.com/arachnetech/homebridge-mqttthing
+
+homebridge_version: 1.11.0
+homebridge_ui_x_version: 5.5.0
 
 homebridge_username: "0E:CA:D7:62:29:63"
 homebridge_pin: 031-45-154
 homebridge_insecure_mode: true
 homebridge_plugins:
   - name: homebridge-dummy
-    version: 0.5.0
+    version: 1.1.0
   - name: homebridge-mqttthing
-    version: 1.1.32
+    version: 1.1.47
 
-# DHT_sensor
+# =====================================================
+# Config DHT_sensor
+# =====================================================
+
 srv_dht_mqtt_enable: True
 srv_dht_mqtt_config:
   mqtt_user: user

@@ -6,38 +6,33 @@
     - vars.yaml
   vars:
     ansible_python_interpreter: /usr/bin/python3
-    docker_install_compose: true
-    docker_users:
-      - pi
-    docker_pip_executable: pip3
-    pip_package: python3-pip
 
   pre_tasks:
     - name: Config RaspberryPi | Serial
       import_tasks: tasks/raspi_config_serial.yaml
       when: raspi_config.serial is defined
+
     - name: Install base package
       import_tasks: tasks/base.yaml
+
     - name: Disable swap
       import_tasks: tasks/disable_swap.yaml
-    - name: Setup WiFi Reconnect
-      import_tasks: tasks/wifi-reconnect.yaml
+
+    # - name: Setup WiFi Reconnect
+    #   import_tasks: tasks/wifi-reconnect.yaml
 
   roles:
-    - ericsysmin.chrony
-    - geerlingguy.pip
-    - geerlingguy.docker_arm
     - nodejs
-    - mosquitto
-    - zigbee2mqtt
+    - pbonrad.mosquitto
+    - finalgene.zigbee2mqtt
     - homebridge
 
-  tasks:
-    - name: Install loader for cc253x
-      import_tasks: tasks/soft_install_cc.yaml
-    - name: Install HomeBridge and Co
-      import_tasks: tasks/soft_install_homebridge_co.yaml
-    - name: Install srv-dht-mqtt
-      include_role:
-        name: srv-dht-mqtt
-      when: srv_dht_mqtt_enable
+  # tasks:
+  #   - name: Install loader for cc253x
+  #     import_tasks: tasks/soft_install_cc.yaml
+  #   - name: Install HomeBridge and Co
+  #     import_tasks: tasks/soft_install_homebridge_co.yaml
+  #   - name: Install srv-dht-mqtt
+  #     include_role:
+  #       name: srv-dht-mqtt
+  #     when: srv_dht_mqtt_enable

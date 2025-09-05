@@ -1,18 +1,32 @@
 ---
-- name: Node.js | Check binary directory
-  file:
-    path: "{{ nodejs_dir }}"
-    state: directory
-    recurse: yes
+- name: Node.js | Check installation method
+  fail:
+    msg: "Unsupported installation method: {{ nodejs_installation_method }}. Supported methods: 'binary', 'repository'"
+  when: nodejs_installation_method not in ['binary', 'repository']
 
-- name: Node.js | Download and untar binary
-  unarchive:
-    src: "https://unofficial-builds.nodejs.org/download/release/v{{ nodejs_version }}/node-v{{ nodejs_version }}-linux-armv6l.tar.gz"
-    dest: "{{ nodejs_dir }}"
-    remote_src: yes
-    extra_opts: [--strip-components=1]
+- name: Node.js | Install via binary method
+  include_tasks: binary.yml
+  when: nodejs_installation_method == 'binary'
 
-- name:  Node.js | Add bin dir to system-wide $PATH
-  copy:
-    dest: /etc/profile.d/node-path.sh
-    content: "PATH=$PATH:{{ nodejs_dir }}/bin"
+- name: Node.js | Install via repository method
+  include_tasks: repository.yml
+  when: nodejs_installation_method == 'repository'
+
+- name: Node.js | Verify Node.js installation
+  command: "{{ (nodejs_installation_method == 'binary') | ternary(nodejs_bin ~ '/node', 'node') }} --version"
+  register: node_version_check
+  changed_when: false
+  ignore_errors: true
+
+- name: Node.js | Installation verification failed
+  fail:
+    msg: "Node.js installation failed. Could not verify node --version command."
+  when: node_version_check.rc != 0
+
+- name: Node.js | Display installation success
+  debug:
+    msg: "Node.js {{ node_version_check.stdout }} successfully installed via {{ nodejs_installation_method }} method"
+
+- name: Node.js | Corepack enable pnpm
+  command: "{{ (nodejs_installation_method == 'binary') | ternary(nodejs_bin ~ '/corepack', 'corepack') }} enable pnpm"
+  when: nodejs_corepack_enable_pnpm

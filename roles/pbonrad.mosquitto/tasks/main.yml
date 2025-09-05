@@ -1,0 +1,53 @@
+---
+- name: Add Mosquitto apt key
+  apt_key:
+    url: "{{ mosquitto_debian_url_base }}/mosquitto-repo.gpg"
+    id: 30993623
+    state: present
+  become: true
+  when: ansible_distribution == "Debian"
+
+- name: Add Mosquitto apt repository
+  apt_repository:
+    repo: "deb {{ mosquitto_debian_url_base }} {{ ansible_distribution_release | lower }} main"
+    update_cache: yes
+    state: present
+  become: true
+  when: ansible_distribution == "Debian"
+
+- name: Install Mosquitto
+  apt:
+    name: mosquitto
+    state: present
+  become: true
+
+- name: Prepare merged Mosquitto configuration
+  set_fact:
+    mosquitto_config_merged: "{{ mosquitto_config_default | combine(mosquitto_config|default({}), recursive=True) }}"
+
+- name: Ensure mosquitto passwd file exists
+  file:
+    path: "{{ mosquitto_config_merged.password_file }}"
+    state: touch
+    mode: "0640"
+  become: true
+
+- name: Add Mosquitto users
+  shell: mosquitto_passwd -b {{ mosquitto_config_merged.password_file }} {{ item.username }} {{ item.password }}
+  loop: "{{ mosquitto_users }}"
+  become: true
+  notify: Restart Mosquitto
+
+- name: Configure Mosquitto
+  template:
+    src: mosquitto.conf.j2
+    dest: /etc/mosquitto/mosquitto.conf
+  become: true
+  notify: Restart Mosquitto
+
+- name: Start Mosquitto as service and enable to start on boot
+  service:
+    name: mosquitto
+    state: started
+    enabled: yes
+  become: true

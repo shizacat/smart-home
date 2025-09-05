@@ -1,0 +1,48 @@
+---
+- name: Prepare
+  hosts: all
+  tasks:
+    - name: Add nodejs repository
+      block:
+        - name: Ensure gpg binary is installed
+          ansible.builtin.apt:
+            update_cache: true
+            name:
+              - gnupg
+
+        - name: Ensure keyring path exists
+          ansible.builtin.file:
+            path: /etc/apt/keyrings
+            state: directory
+            mode: "0755"
+
+        - name: Fetch nodesource gpg key
+          ansible.builtin.apt_key:
+            url: https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key
+            keyring: /etc/apt/keyrings/nodesource.gpg
+
+        - name: Add nodejs repository into sources list
+          ansible.builtin.apt_repository:
+            repo: deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main
+            state: present
+
+    - name: Add docker systemctl replacement
+      block:
+        - name: Ensure python is installed
+          ansible.builtin.apt:
+            update_cache: true
+            name:
+              - python
+
+        - name: Ensure docker systemctl replacement is installed
+          ansible.builtin.get_url:
+            url: https://raw.githubusercontent.com/gdraheim/docker-systemctl-replacement/master/files/docker/systemctl.py
+            dest: /usr/local/bin/systemctl
+            mode: "0755"
+
+    - name: Install zigbee2mqtt dependencies
+      ansible.builtin.package:
+        update_cache: true
+        name:
+          - git
+          - nodejs

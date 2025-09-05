@@ -1,4 +1,7 @@
 ---
+# https://github.com/homebridge/homebridge
+# https://github.com/homebridge/homebridge-config-ui-x
+
 # Base
 homebridge_version: 1.3.5
 

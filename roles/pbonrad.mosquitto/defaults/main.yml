@@ -1,0 +1,65 @@
+---
+# url
+mosquitto_debian_url_base: "https://repo.mosquitto.org/debian"
+
+# Configuration options, default values.
+# You can override them through mosquitto_config variable.
+mosquitto_config_default:
+  # General configuration
+  mosquitto_pid_file: "/var/run/mosquitto/mosquitto.pid"
+  per_listener_settings: false
+  allow_zero_length_clientid: true
+  auto_id_prefix: "auto-"
+  check_retain_source: true
+  # max_inflight_bytes: 0
+  # max_inflight_messages: 20
+  # max_keepalive: 65535
+  # max_packet_size: 0
+  # max_queued_bytes: 0
+  # max_qos: 2
+  # max_queued_messages: 1000
+  # memory_limit: 0
+  # message_size_limit: 0
+  queue_qos0_messages: false
+  retain_available: true
+  set_tcp_nodelay: false
+  # sys_interval: 10
+  upgrade_outgoing_qos: false
+  user: "mosquitto"
+
+  # Listeners
+  listeners:
+    - port: 1883
+      protocol: "mqtt"
+      max_connections: -1
+
+  # Persistence
+  autosave_interval: 1800
+  autosave_on_changes: false
+  persistence: false
+  persistence_file: "mosquitto.db"
+  # Set to e.g. /var/lib/mosquitto if running as a proper service on Linux or
+  persistence_location: "/var/lib/mosquitto"
+
+  # Logging
+  # Use "log_dest none" if you wish to disable logging.
+  # The file destination "log_dest file /var/log/mosquitto/mosquitto.log"
+  log_dest: "file /var/log/mosquitto/mosquitto.log"
+  log_types:
+    - "error"
+    - "warning"
+    - "notice"
+    - "information"
+  connection_messages: true
+  log_timestamp: true
+
+  # Security
+  allow_anonymous: false
+  password_file: "/etc/mosquitto/passwd"
+  acl_file: ""
+
+# Password file content
+# Example:
+  # - username: "user1"
+  #   password: "pass1"
+mosquitto_users: []
