@@ -10,8 +10,6 @@ time_zone: "Europe/Moscow"
 
 # mosquitto_u_user: user
 # mosquitto_u_password: DRBhTL2883
-# zigbee2mqtt_mosquitto_user: user
-# zigbee2mqtt_mosquitto_password: DRBhTL2883
 
 # =====================================================
 # Config mosquitto
@@ -49,7 +47,6 @@ nodejs_corepack_enable_pnpm: true
 # Config ZigBee to MQTT
 # =====================================================
 
-# version
 zigbee_version: 2.6.1
 # allow new devices to join
 zigbee_permit_join: true
@@ -71,24 +68,28 @@ zigbee_frontend:
   host: 0.0.0.0
   auth_token: "H65NFqNXPxuXvj9D"
 
-# zigbee2mqtt_device: /dev/ttyACM0
-# zigbee2mqtt_token: H65NFqNXPxuXvj9D
-# zigbee2mqtt_port: "8088"
-
 # =====================================================
 # Config HomeBridge
 # =====================================================
+# https://github.com/mpatfield/homebridge-dummy
+# https://github.com/arachnetech/homebridge-mqttthing
+
+homebridge_version: 1.11.0
+homebridge_ui_x_version: 5.5.0
 
 homebridge_username: "0E:CA:D7:62:29:63"
 homebridge_pin: 031-45-154
 homebridge_insecure_mode: true
 homebridge_plugins:
   - name: homebridge-dummy
-    version: 0.5.0
+    version: 1.1.0
   - name: homebridge-mqttthing
-    version: 1.1.32
+    version: 1.1.47
 
-# DHT_sensor
+# =====================================================
+# Config DHT_sensor
+# =====================================================
+
 srv_dht_mqtt_enable: True
 srv_dht_mqtt_config:
   mqtt_user: user
